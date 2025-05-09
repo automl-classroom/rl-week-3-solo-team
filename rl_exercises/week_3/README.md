@@ -36,8 +36,11 @@ Your task is to:
 Finally, analyze your results by answering:
 
 - How much does performance improve with tuned hyperparameters?
+  - the best value achieved (after modifying the code of the HyperSweeper repo to actually maximize instead of minimize!!!) is 60.31 which is much higher than the minimum of 6.44 indicating that performance significantly increased with tuned hyperparameters.
 - How does the learning rate affect training steps?
+  - when looking at the data for 1000 runs, the learning rate does not seem to have a very strong impact on the learning between 0.01 and 0.5 as always very good and very bad runs are present. The trendline however is slightly positive indicating that a higher learning rate is slightly better.
 - What value of $\epsilon$ yields the best performance?
+  - the best performance was achieved with ε ≈ 0.167.
 
 _Note:_ We have not provided test cases for this part. Instead, use the example templates in Hypersweeper and the starter code to guide your implementation.
 

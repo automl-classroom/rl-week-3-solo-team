@@ -35,23 +35,30 @@ def run_episodes(agent, env, num_episodes=5):
     # Extend it to run multiple episodes and store the total discounted rewards in a list.
     # Finally, return the mean discounted reward across episodes.
 
-    total = 0.0
-    state, _ = env.reset()
-    done = False
-    action = agent.predict_action(state)
-    while not done:
-        next_state, reward, term, trunc, _ = env.step(action)
-        done = term or trunc
-        next_action = agent.predict_action(next_state)
-        agent.update_agent(state, action, reward, next_state, next_action, done)
-        total += reward
-        state, action = next_state, next_action
-    return total
+    running_average = 0.0
+
+    for _ in range(num_episodes):
+        total = 0.0
+        state, _ = env.reset()
+        done = False
+        action = agent.predict_action(state)
+        while not done:
+            next_state, reward, term, trunc, _ = env.step(action)
+            done = term or trunc
+            next_action = agent.predict_action(next_state)
+            agent.update_agent(state, action, reward, next_state, next_action, done)
+            total += reward
+            state, action = next_state, next_action
+        running_average += total
+    print(f"Running average: {running_average / num_episodes}")
+    return running_average / num_episodes
 
 
 # Decorate the function with the path of the config file and the particular config to use
 @hydra.main(
-    config_path="../configs/agent/", config_name="sarsa_sweep", version_base="1.1"
+    config_path="../configs/agent/",
+    config_name="sarsa_sweep",
+    version_base="1.1",
 )
 def main(cfg: DictConfig) -> dict:
     """Main function to run SARSA with Hydra-configured components.
@@ -69,7 +76,6 @@ def main(cfg: DictConfig) -> dict:
     float
         Mean total reward across the episodes.
     """
-
     # Hydra-instantiate the env
     env = instantiate(cfg.env)
     # instantiate the policy (passing in env!)
